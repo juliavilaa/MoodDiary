@@ -42,4 +42,19 @@ router.post("/login", async (req, res) => {
     });
 });
 
+
+router.put("/:id", (req, res) => {
+    const { id } = req.params;
+    const { nombre, correo, clave, edad } = req.body;
+    userSchema
+      .updateOne(
+        { _id: id },
+        {
+          $set: { nombre, correo, clave, edad },
+        }
+      )
+      .then((data) => res.json(data))
+      .catch((error) => res.json({ message: error }));
+  });
+
 module.exports = router;
