@@ -12,7 +12,7 @@ router.post("/signup", async (req, res) => {
         edad: edad
     });
     usuario.clave = await usuario.encryptClave(usuario.clave);
-    await user.save(); 
+    await usuario.save(); 
     const token = jwt.sign({ id: usuario._id }, process.env.SECRET, {
         expiresIn: 60 * 60 * 24, //un día en segundos
     });
@@ -33,7 +33,7 @@ router.post("/login", async (req, res) => {
     if (!usuario) return res.status(400).json({ error: "Usuario no encontrado" });
     //Transformando la contraseña a su valor original para 
     //compararla con la clave que se ingresa en el inicio de sesión
-    const validPassword = await bcrypt.compare(req.body.clave, user.clave);
+    const validPassword = await bcrypt.compare(req.body.clave, usuario.clave);
     if (!validPassword)
         return res.status(400).json({ error: "Clave no válida" });
     res.json({
@@ -41,6 +41,7 @@ router.post("/login", async (req, res) => {
         data: "Bienvenido(a)",
     });
 });
+
 
 
 router.put("/:id", (req, res) => {

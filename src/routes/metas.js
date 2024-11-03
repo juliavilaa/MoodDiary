@@ -10,7 +10,7 @@ router.post("/", (req, res) => {
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 });
-module.exports = router;
+
 //Consultar todos las metas
 router.get("/",(req, res) => {
   metasSchema
@@ -31,7 +31,7 @@ router.get("/:id", (req, res) => {
   //Modificar una emocion por su id
   router.put("/:id", (req, res) => {
     const { id } = req.params;
-    const { nombre, edad, tipo, fecha } = req.body;
+    const { titulo, descripcion, fechaInicio, fechaFinalizacion,estado } = req.body;
     metasSchema
       .updateOne(
         { _id: id },
@@ -56,3 +56,5 @@ router.get("/:id", (req, res) => {
         res.json({ message: error });
       });
   });
+module.exports = router;
+

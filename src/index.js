@@ -5,8 +5,7 @@ const port = 3000;
 const authenticationRoutes = require("./routes/authentication");
 const emocionesRoutes = require("./routes/emociones");
 const metasRoutes = require("./routes/metas");
-const reportesRoutes = require("./routes/reportes");
-const usuariosRoutes = require("./routes/usuarios");
+//const reportesRoutes = require("./routes/reportes");
 const mongoose = require("mongoose");
 
 
@@ -17,7 +16,7 @@ app.use(parser.urlencoded({ extended: false }));
 app.use(parser.json()); 
 
 // transforma los datos a formato JSON //Gestión de las rutas usando el middleware
-app.use("/api/authentication", authenticationRoutes);
+app.use("/api", authenticationRoutes);
 app.use(express.json()); 
 
 app.use("/api/emociones", emocionesRoutes);
@@ -26,8 +25,8 @@ app.use(express.json());
 app.use("/api/metas", metasRoutes);
 app.use(express.json()); 
 
-app.use("/api/reportes", reportesRoutes);
-app.use(express.json()); 
+/* app.use("/api/reportes", reportesRoutes);
+app.use(express.json());  */
 
 
 //Conexión a la base de datos

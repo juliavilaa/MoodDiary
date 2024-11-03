@@ -16,5 +16,5 @@ const emocionesSchema = mongoose.Schema({
         requiered: true,
     }
 });
-module.exports = mongoose.model("Emociones", emocionesShema);
+module.exports = mongoose.model("Emociones", emocionesSchema);
 

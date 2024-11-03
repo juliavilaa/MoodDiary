@@ -33,7 +33,7 @@ router.get("/:id", (req, res) => {
 //Modificar una emocion por su id
 router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { nombre, edad, tipo, fecha } = req.body;
+  const { nombreEmocion, descripcion, fecha } = req.body;
   emocionesSchema
     .updateOne(
       { _id: id },
