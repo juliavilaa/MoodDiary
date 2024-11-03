@@ -5,7 +5,7 @@ const emocionesSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    
+
     descripcion: {
         type: String,
         required: true,
@@ -17,3 +17,4 @@ const emocionesSchema = mongoose.Schema({
     }
 });
 module.exports = mongoose.model("Emociones", emocionesShema);
+
