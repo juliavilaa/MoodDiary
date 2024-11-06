@@ -9,7 +9,7 @@ router.post("/", verifyToken, (req, res) => {
     .save()
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
-});s
+});
 
 //Consultar todos las metas
 router.get("/",verifyToken,(req, res) => {

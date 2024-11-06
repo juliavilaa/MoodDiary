@@ -17,11 +17,15 @@ const userSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+<<<<<<< Updated upstream
 
     emociones: [{type: mongoose.Schema.Types.ObjectId, ref: 'Emociones'}]
 
 
 
+=======
+    metas: [{type: mongoose.Schema.Types.ObjectId,ref: 'Metas'}]
+>>>>>>> Stashed changes
 });
 userSchema.methods.encryptClave = async (clave) => {
     const salt = await bcrypt.genSalt(10);
