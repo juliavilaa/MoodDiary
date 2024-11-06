@@ -3,6 +3,7 @@ const router = express.Router(); //manejador de rutas de express
 const userSchema = require("../models/usuarios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const verifyToken = require("./validate_token");
 router.post("/signup", async (req, res) => {
     const { nombre, correo, clave, edad} = req.body;
     const usuario = new userSchema({
@@ -13,13 +14,6 @@ router.post("/signup", async (req, res) => {
     });
     usuario.clave = await usuario.encryptClave(usuario.clave);
     await usuario.save(); 
-    const token = jwt.sign({ id: usuario._id }, process.env.SECRET, {
-        expiresIn: 60 * 60 * 24, //un día en segundos
-    });
-    res.json({
-        auth: true,
-        token,
-    });
 });
 
 //inicio de sesión
@@ -36,15 +30,20 @@ router.post("/login", async (req, res) => {
     const validPassword = await bcrypt.compare(req.body.clave, usuario.clave);
     if (!validPassword)
         return res.status(400).json({ error: "Clave no válida" });
+    const token = jwt.sign({ id: usuario._id }, process.env.SECRET, {
+        expiresIn: 60 * 60 * 24, //un día en segundos
+    });
     res.json({
         error: null,
         data: "Bienvenido(a)",
+        auth: true,
+        token,
     });
 });
 
 
 
-router.put("/:id", (req, res) => {
+router.put("/:id", verifyToken, (req, res) => {
     const { id } = req.params;
     const { nombre, correo, clave, edad } = req.body;
     userSchema
@@ -57,5 +56,14 @@ router.put("/:id", (req, res) => {
       .then((data) => res.json(data))
       .catch((error) => res.json({ message: error }));
   });
+
+  router.get("/",verifyToken,(req, res) => {
+    userSchema
+      .find()
+      .then((data) => res.json(data))
+      .catch((error) => res.json({ message: error }));
+  });
+
+
 
 module.exports = router;
