@@ -5,7 +5,7 @@ const verifyToken = require('./validate_token');
 
 
 // Postear emociones
-router.post("/", (req, res) => {
+router.post("/", verifyToken, (req, res) => {
   const emociones = emocionesSchema(req.body);
   emociones
     .save()
@@ -14,7 +14,7 @@ router.post("/", (req, res) => {
 });
 
 //Consultar todas las emociones
-router.get("/",  (req, res) => {
+router.get("/", verifyToken,  (req, res) => {
   emocionesSchema
     .find()
     .then((data) => res.json(data))
@@ -22,7 +22,7 @@ router.get("/",  (req, res) => {
 });
 
 //Consultar emocion por du id
-router.get("/:id", (req, res) => {
+router.get("/:id", verifyToken, (req, res) => {
   const { id } = req.params;
   emocionesSchema
     .findById(id)
@@ -31,7 +31,7 @@ router.get("/:id", (req, res) => {
 });
 
 //Modificar una emocion por su id
-router.put("/:id", (req, res) => {
+router.put("/:id",verifyToken, (req, res) => {
   const { id } = req.params;
   const { nombreEmocion, descripcion, fecha } = req.body;
   emocionesSchema
@@ -47,7 +47,7 @@ router.put("/:id", (req, res) => {
 
 //Eliminar una emocion por su id
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", verifyToken, (req, res) => {
   const { id } = req.params;
   emocionesSchema
     .findByIdAndDelete(id)
