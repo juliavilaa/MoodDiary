@@ -1,18 +1,18 @@
-//const verifyToken = require('./validate_token');
+const verifyToken = require('./validate_token');
 const express = require("express");
 const router = express.Router(); //manejador de rutas de express
 const metasSchema = require("../models/metas"); //Nuevo animal
 
-router.post("/", (req, res) => {
+router.post("/", verifyToken, (req, res) => {
   const metas = metasSchema(req.body);
   metas
     .save()
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
-});
+});s
 
 //Consultar todos las metas
-router.get("/",(req, res) => {
+router.get("/",verifyToken,(req, res) => {
   metasSchema
     .find()
     .then((data) => res.json(data))
@@ -20,7 +20,7 @@ router.get("/",(req, res) => {
 });
 
 //Consultar meta por du id
-router.get("/:id", (req, res) => {
+router.get("/:id", verifyToken,(req, res) => {
     const { id } = req.params;
     metasSchema
       .findById(id)
@@ -29,7 +29,7 @@ router.get("/:id", (req, res) => {
   });
   
   //Modificar una emocion por su id
-  router.put("/:id", (req, res) => {
+  router.put("/:id", verifyToken, (req, res) => {
     const { id } = req.params;
     const { titulo, descripcion, fechaInicio, fechaFinalizacion,estado } = req.body;
     metasSchema
@@ -45,7 +45,7 @@ router.get("/:id", (req, res) => {
   
   //Eliminar una emocion por su id
   
-  router.delete("/:id", (req, res) => {
+  router.delete("/:id", verifyToken, (req, res) => {
     const { id } = req.params;
     metasSchema
       .findByIdAndDelete(id)
