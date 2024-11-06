@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router(); //manejador de rutas de express
-const emocionesSchema = require("../models/emociones");
+const emocionesSchema = require("../models/Emociones");
 const verifyToken = require('./validate_token');
 
 

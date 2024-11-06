@@ -4,6 +4,9 @@ const userSchema = require("../models/usuarios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("./validate_token");
+const emocionesSchema= require("../models/Emociones");
+
+
 router.post("/signup", async (req, res) => {
     const { nombre, correo, clave, edad} = req.body;
     const usuario = new userSchema({
@@ -64,6 +67,29 @@ router.put("/:id", verifyToken, (req, res) => {
       .catch((error) => res.json({ message: error }));
   });
 
+  router.put("/:id", async (req, res) =>{
+    const {id}=req.params;
+    const emocion = emocionesSchema(req.body);
+    var idEmocion= null;
+
+    const emocionConsulta = await emocionesSchema.findOne({nombreEmocion: req.body.nombreEmocion});
+    if(!emocionConsulta){
+        await emocion.save().then((dataEmociones) => {
+            idEmocion = dataEmociones._id;
+        });
+    }else {
+        idEmocion=emocionConsulta._id;
+    }
+
+    userSchemaSchema
+    .updateOne({_id: id}, {
+        //$push >> agrega un nuevo elemento sin mportar si ya existe
+        //$addToSet >> agrega un nuevo elemento sin repetirlo
+        $push:{emociones: idEmocion}
+    })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({message: error}));
+});
 
 
 module.exports = router;

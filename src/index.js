@@ -2,7 +2,7 @@ const parser = require("body-parser");
 const express = require("express");
 const app = express();
 const port = 3000;
-const authenticationRoutes = require("./routes/authentication");
+const usuariosRoutes = require("./routes/usuarios");
 const emocionesRoutes = require("./routes/emociones");
 const metasRoutes = require("./routes/metas");
 //const reportesRoutes = require("./routes/reportes");
@@ -16,12 +16,8 @@ app.use(parser.urlencoded({ extended: false }));
 app.use(parser.json()); 
 
 // transforma los datos a formato JSON //Gestión de las rutas usando el middleware
-app.use("/api", authenticationRoutes);
-app.use(express.json()); 
-
+app.use("/api", usuariosRoutes);
 app.use("/api/emociones", emocionesRoutes);
-app.use(express.json()); 
-
 app.use("/api/metas", metasRoutes);
 app.use(express.json()); 
 
