@@ -16,7 +16,12 @@ const userSchema = mongoose.Schema({
     edad: {
         type: Number,
         required: true
-    }
+    },
+
+    emociones: [{type: mongoose.Schema.Types.ObjectId, ref: 'Emociones'}]
+
+
+
 });
 userSchema.methods.encryptClave = async (clave) => {
     const salt = await bcrypt.genSalt(10);
