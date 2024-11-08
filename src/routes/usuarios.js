@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("./validate_token");
 const emocionesSchema= require("../models/Emociones");
-
+const  metasSchema= require("../models/metas");
 
 router.post("/signup", async (req, res) => {
     const { nombre, correo, clave, edad} = req.body;
@@ -91,5 +91,28 @@ router.put("/:id", verifyToken, (req, res) => {
     .catch((error) => res.json({message: error}));
 });
 
+router.put("/:id", async (req, res) =>{
+    const {id}=req.params;
+    const meta = metasSchema(req.body);
+    var idMeta= null;
+
+    const metaConsulta = await metasSchema.findOne({tituloMeta: req.body.tituloMeta});
+    if(!metaConsulta){
+        await meta.save().then((dataMetas) => {
+            idMeta = dataMetas._id;
+        });
+    }else {
+        idMeta=metaConsulta._id;
+    }
+
+    userSchemaSchema
+    .updateOne({_id: id}, {
+        //$push >> agrega un nuevo elemento sin mportar si ya existe
+        //$addToSet >> agrega un nuevo elemento sin repetirlo
+        $push:{emociones: idEmocion}
+    })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({message: error}));
+});
 
 module.exports = router;
