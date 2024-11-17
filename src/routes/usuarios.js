@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const verifyToken = require("./validate_token");
 const emocionesSchema= require("../models/Emociones");
 const  metasSchema= require("../models/metas");
+const Emociones = require("../models/Emociones");
 
 router.post("/signup", async (req, res) => {
     const { nombre, correo, clave, edad} = req.body;
@@ -67,29 +68,40 @@ router.put("/usuario/:id", verifyToken, (req, res) => {
       .catch((error) => res.json({ message: error }));
   });
 //Asociar una Emocion a un Usuario
-  router.put("/emocion/:id", async (req, res) =>{
-    const {id}=req.params;
-    const emocion = emocionesSchema(req.body);
-    var idEmocion= null;
+router.put("emocion/:id", async (req, res) => {
+    const { id } = req.params;
 
-    const emocionConsulta = await emocionesSchema.findOne({nombreEmocion: req.body.nombreEmocion});
-    if(!emocionConsulta){
-        await emocion.save().then((dataEmociones) => {
+    try {
+        let idEmocion = null;
+
+        
+        const emocionConsulta = await emocionesSchema.findOne({ nombreEmocion: req.body.nombreEmocion });
+
+        if (!emocionConsulta) {
+           
+            const { _id, ...emocionData } = req.body;
+
+            const nuevaEmocion = new emocionesSchema(emocionData);
+            const dataEmociones = await nuevaEmocion.save();
             idEmocion = dataEmociones._id;
-        });
-    }else {
-        idEmocion=emocionConsulta._id;
-    }
+        } else {
+            idEmocion = emocionConsulta._id;
+        }
 
-    userSchema
-    .updateOne({_id: id}, {
-        //$push >> agrega un nuevo elemento sin mportar si ya existe
-        //$addToSet >> agrega un nuevo elemento sin repetirlo
-        $push:{emociones: idEmocion}
-    })
-    .then((data) => res.json(data))
-    .catch((error) => res.json({message: error}));
+        const resultado = await userSchema.updateOne(
+            { _id: id },
+            {
+                $addToSet: { Emociones: idEmocion }, 
+            }
+        );
+
+        res.json(resultado);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
+
+
 //Asociar una meta a un usuario
 router.put("/meta/:id", async (req, res) =>{
     const {id}=req.params;
