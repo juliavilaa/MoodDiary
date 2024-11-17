@@ -5,7 +5,6 @@ const port = 3000;
 const usuariosRoutes = require("./routes/usuarios");
 const emocionesRoutes = require("./routes/emociones");
 const metasRoutes = require("./routes/metas");
-//const reportesRoutes = require("./routes/reportes");
 const mongoose = require("mongoose");
 
 

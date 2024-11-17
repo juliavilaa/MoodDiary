@@ -45,8 +45,8 @@ router.post("/login", async (req, res) => {
 });
 
 
-
-router.put("/:id", verifyToken, (req, res) => {
+//Update Usuario
+router.put("/usuario/:id", verifyToken, (req, res) => {
     const { id } = req.params;
     const { nombre, correo, clave, edad } = req.body;
     userSchema
@@ -59,15 +59,15 @@ router.put("/:id", verifyToken, (req, res) => {
       .then((data) => res.json(data))
       .catch((error) => res.json({ message: error }));
   });
-
+//get usuario
   router.get("/",verifyToken,(req, res) => {
     userSchema
       .find()
       .then((data) => res.json(data))
       .catch((error) => res.json({ message: error }));
   });
-
-  router.put("/:id", async (req, res) =>{
+//Asociar una Emocion a un Usuario
+  router.put("/emocion/:id", async (req, res) =>{
     const {id}=req.params;
     const emocion = emocionesSchema(req.body);
     var idEmocion= null;
@@ -81,7 +81,7 @@ router.put("/:id", verifyToken, (req, res) => {
         idEmocion=emocionConsulta._id;
     }
 
-    userSchemaSchema
+    userSchema
     .updateOne({_id: id}, {
         //$push >> agrega un nuevo elemento sin mportar si ya existe
         //$addToSet >> agrega un nuevo elemento sin repetirlo
@@ -90,13 +90,13 @@ router.put("/:id", verifyToken, (req, res) => {
     .then((data) => res.json(data))
     .catch((error) => res.json({message: error}));
 });
-
-router.put("/:id", async (req, res) =>{
+//Asociar una meta a un usuario
+router.put("/meta/:id", async (req, res) =>{
     const {id}=req.params;
     const meta = metasSchema(req.body);
     var idMeta= null;
 
-    const metaConsulta = await metasSchema.findOne({tituloMeta: req.body.tituloMeta});
+    const metaConsulta = await metasSchema.findOne({titulo: req.body.titulo});
     if(!metaConsulta){
         await meta.save().then((dataMetas) => {
             idMeta = dataMetas._id;
@@ -105,11 +105,11 @@ router.put("/:id", async (req, res) =>{
         idMeta=metaConsulta._id;
     }
 
-    userSchemaSchema
+    userSchema
     .updateOne({_id: id}, {
         //$push >> agrega un nuevo elemento sin mportar si ya existe
         //$addToSet >> agrega un nuevo elemento sin repetirlo
-        $push:{emociones: idEmocion}
+        $push:{metas: idMeta}
     })
     .then((data) => res.json(data))
     .catch((error) => res.json({message: error}));
