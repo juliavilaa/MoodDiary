@@ -71,16 +71,22 @@ router.put("/emocion/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        let idEmocion = null;        
-        const emocionConsulta = await emocionesSchema.findOne({ nombreEmocion: req.body.nombreEmocion });
-        if (!emocionConsulta) {           
+        let idEmocion = null;
+
+        
+        const emocionConsulta = await emocionesSchema.findOne({ descripcion: req.body.descripcion });
+
+        if (!emocionConsulta) {
+           
             const { _id, ...emocionData } = req.body;
+
             const nuevaEmocion = new emocionesSchema(emocionData);
             const dataEmociones = await nuevaEmocion.save();
             idEmocion = dataEmociones._id;
         } else {
             idEmocion = emocionConsulta._id;
         }
+
         const resultado = await userSchema.updateOne(
             { _id: id },
             {
@@ -92,6 +98,7 @@ router.put("/emocion/:id", async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+
 });
 
 
