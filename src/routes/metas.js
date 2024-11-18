@@ -1,7 +1,7 @@
 const verifyToken = require('./validate_token');
 const express = require("express");
 const router = express.Router(); //manejador de rutas de express
-const metasSchema = require("../models/metas"); //Nuevo animal
+const metasSchema = require("../models/metas"); 
 
 router.post("/", verifyToken, (req, res) => {
   const metas = metasSchema(req.body);
@@ -12,11 +12,26 @@ router.post("/", verifyToken, (req, res) => {
 });
 
 //Consultar todos las metas
-router.get("/",verifyToken,(req, res) => {
-  metasSchema
-    .find()
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+router.get("/", verifyToken, async (req, res) => {
+  try {
+      const metas = await metasSchema.find();
+      const now = new Date();
+
+      // Actualizar estados si las fechas ya pasaron
+      const metasActualizadas = await Promise.all(
+          metas.map(async (meta) => {
+              if (meta.fechaFinalizacion && new Date(meta.fechaFinalizacion) < now && !meta.estado) {
+                  meta.estado = true;
+                  await meta.save();
+              }
+              return meta;
+          })
+      );
+
+      res.json(metasActualizadas);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
 });
 
 //Consultar meta por du id
