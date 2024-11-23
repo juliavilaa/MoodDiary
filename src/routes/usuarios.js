@@ -19,6 +19,14 @@ router.post("/signup", async (req, res) => {
   });
   usuario.clave = await usuario.encryptClave(usuario.clave);
   await usuario.save();
+  res.status(201).json({
+    message: "Usuario registrado exitosamente",
+    user: {
+      nombre: usuario.nombre,
+      correo: usuario.correo,
+      edad: usuario.edad,
+    },
+  });
 });
 
 //inicio de sesión
@@ -42,6 +50,12 @@ router.post("/login", async (req, res) => {
     data: "Bienvenido(a)",
     auth: true,
     token,
+    user: {
+      id: usuario._id,
+      nombre: usuario.nombre,
+      correo: usuario.correo,
+      edad: usuario.edad,
+    },
   });
 });
 
