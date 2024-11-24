@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 //En el servidor se va a recibir así:
 //access-token
 const verifyToken = (req, res, next) => {
-    const token = req.header('access-token')
+    const token = req.header('accessToken')
     if (!token) return res.status(401).json({ error: '¡Lo sentimos!, pero no tiene permisos para acceder a esta ruta.' })
     try {
         const verified = jwt.verify(token, process.env.SECRET)
